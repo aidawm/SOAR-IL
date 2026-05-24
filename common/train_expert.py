@@ -35,7 +35,10 @@ def train_policy(EnvCls):
     assert sac_agent.reinitialize == True
 
     sac_agent.test_fn = sac_agent.test_agent_ori_env
-    sac_test_rets, sac_alphas, sac_log_pis, sac_time_steps = sac_agent.learn_mujoco(print_out=True)
+
+    os.makedirs('expert_data/models/', exist_ok=True)
+    save_path = f'expert_data/models/{env_name}_{seed}.pt'
+    sac_test_rets, sac_alphas, sac_log_pis, sac_time_steps = sac_agent.learn_mujoco(print_out=True, save_path=save_path)
 
     plot_sac_curve(axs[0], sac_test_rets, sac_alphas, sac_log_pis, sac_time_steps)
 
