@@ -440,10 +440,10 @@ class SAC:
             obs = np.zeros((self.max_ep_len, o.shape[0]))
             acts = np.zeros((self.max_ep_len, self.act_dim))
             for t in range(self.max_ep_len):
-                # Take deterministic actions at test time?
-                o, a, _, _, _ = self.test_env.step(self.get_action(o, True))
+                a = self.get_action(o, True)
+                o, _, _, _, _ = self.test_env.step(a)
                 obs[t] = o.copy()
-                acts[t] = a.copy()
+                acts[t] = np.atleast_1d(a).copy()
             obs = torch.FloatTensor(obs).to(self.device)[:, self.reward_state_indices]
             acts = torch.FloatTensor(acts).to(self.device)
             # Concatenate states and actions before passing to reward function
