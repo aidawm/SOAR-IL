@@ -1,0 +1,19 @@
+seed: 1
+cuda: 0
+env:
+  env_name: CartPoleContinuous-v0
+  T: 500
+sac:
+  epochs: 200
+  log_step_interval: 5000
+  update_every: 50
+  update_num: 1
+  random_explore_episodes: 10
+  batch_size: 256
+  lr: 3e-4
+  alpha: 0.2
+  automatic_alpha_tuning: true
+  buffer_size: 1000000
+  num_test_episodes: 10
+expert:
+  samples_episode: 50

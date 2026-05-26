@@ -4,26 +4,26 @@ seed: 1
 cuda: -1
 env:
   env_name: MountainCarContinuous-v0
-  T: 111
+  T: 200                          # was 111. Expert ep ~69 steps, but agent needs slack to swing up before it has learned the bang-bang strategy.
   state_indices: all
 irl:
   training_trajs: 10
-  n_itrs: 200
+  n_itrs: 300                     # was 200. MountainCar is harder, give more outer IRL iterations.
   save_interval: 0
   eval_episodes: 10
-  expert_episodes: 1      # ← K, change this to 1, 5, 10, 20, 50
+  expert_episodes: 1              # K — vary this across runs: 1, 5, 10, 20, 50 (file holds 50)
   resample_episodes: 10
 sac:
   k: 1
-  epochs: 5
+  epochs: 30                      # was 5. SAC needs many more env steps per IRL iter to escape the valley.
   log_step_interval: 5000
   update_every: 1
-  random_explore_episodes: 1
+  random_explore_episodes: 20     # was 1. Sparse-reward MountainCar must see a lot of random actions before learning kicks in.
   update_num: 1
-  batch_size: 100
-  lr: 1e-3
-  alpha: 0.2
-  automatic_alpha_tuning: false
+  batch_size: 256                 # was 100. Larger batches stabilize SAC under a moving (IRL) reward.
+  lr: 3e-4                        # was 1e-3. Standard SAC LR, more stable than 1e-3 for sparse signal.
+  alpha: 0.5                      # higher than pendulum's 0.2: forces more entropy/exploration. Critical for sparse reward.
+  automatic_alpha_tuning: false   # auto-tuning collapses alpha→0 in 3 iters on 1-D-action sparse envs (positive feedback loop). Pin it.
   buffer_size: 1000000
   num_test_episodes: 10
   reinitialize: false
